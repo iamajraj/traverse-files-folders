@@ -62,12 +62,16 @@ class FsRouter {
 
 class FsSystem {
   #fileRouter;
+  path = __dirname;
 
-  constructor() {
+  constructor(path) {
+    if (path) {
+      this.path = path;
+    }
     this.#fileRouter = new FsRouter();
   }
 
-  parseFileAndFolders(currentDir = __dirname, folder = null) {
+  parseFileAndFolders(currentDir = this.path, folder = null) {
     const contents = fs.readdirSync(currentDir, { withFileTypes: true });
     contents.forEach((file) => {
       const file_name = file.name;
@@ -95,10 +99,12 @@ class FsSystem {
     });
     return this;
   }
+
   traverse() {
+    console.log(`-----Traversing - "${this.path}"-----`);
     this.#fileRouter.traverse();
   }
 }
 
-const fsSystem = new FsSystem();
+const fsSystem = new FsSystem('hello');
 fsSystem.parseFileAndFolders().traverse();
